@@ -45,6 +45,7 @@ const CHANNELS: readonly Channel[] = [
   { id: "399721", slug: "tvpdokument", name: "TVP Dokument", logo: TVP_LOGO, group: "Polska" },
   { id: "399722", slug: "tvpnauka",    name: "TVP Nauka",    logo: TVP_LOGO, group: "Polska" },
   { id: "399724", slug: "tvprozrywka", name: "TVP Rozrywka", logo: TVP_LOGO, group: "Polska" },
+  { id: "999687", slug: "tvpwilno",    name: "TVP Wilno",    logo: TVP_LOGO, group: "Polska" },
   { id: "399703", slug: "tvphistoria", name: "TVP Historia", logo: TVP_LOGO, group: "Polska" },
 ] as const;
 
