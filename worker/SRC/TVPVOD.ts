@@ -68,7 +68,7 @@ const CACHE_TTL = 600;
 /** Bound every upstream fetch so a hung request fails over fast. */
 const LIVE_TIMEOUT_MS = 7_000;
 /** Raw committed playlist, kept ~fresh by GitHub Actions; served from GitHub's CDN. */
-const RAW_BASE = "https://raw.githubusercontent.com/travino/tvpi/main/streams/";
+const RAW_BASE = "https://raw.githubusercontent.com/seyfettinaskar7-sudo/polish-iptv/main/streams/";
 /**
  * KV TTL for last-known-good. Kept SHORTER than the 30-min cron (900s = 15 min)
  * so a stale entry expires and resolution falls through to the raw GitHub
