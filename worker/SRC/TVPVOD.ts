@@ -325,6 +325,29 @@ function buildM3U(entries: Entry[]): string {
 }
 
 // ---------------------------------------------------------------------------
+// M3U8 builder
+// ---------------------------------------------------------------------------
+
+interface Entry {
+  ch: Channel;
+  url: string;
+}
+
+
+function buildM3U8(entries: Entry[]): string {
+  const lines = ["#EXTM3U"];
+  for (const { ch, url } of entries) {
+    lines.push(
+      `#EXT-X-VERSION:3
+       #EXT-X-STREAM-INF:BANDWIDTH=1280000,RESOLUTION=1280x720
+      url,
+    );
+  }
+  return lines.join("\n") + "\n";
+}
+
+
+// ---------------------------------------------------------------------------
 // Entry point
 // ---------------------------------------------------------------------------
 
