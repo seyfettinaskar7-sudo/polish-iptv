@@ -1,1 +1,4 @@
 #EXTM3U
+
+#EXTINF:-1 tvg-id="2504621" tvg-name="TVP Na Dobre" tvg-logo="https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png" group-title="Polska",TVP Na Dobre
+https://r.dcs.redcdn.pl/livehls/o2/TVP/live/fast_na_dobre_i_na_zle/live.livx/playlist.m3u8?fmp4&ad_session_id=roGV2qai7VkhFiq6DsPDuVIfo1MPWpHRzrLZ49CyRVD.Y7
