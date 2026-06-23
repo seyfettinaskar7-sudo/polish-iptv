@@ -11,9 +11,27 @@ Polish live TV served as M3U playlists through two paths fed off the same channe
 - **Worker** (`https://tvpi.travny.workers.dev`, `worker/src/index.ts`) — per-request resolution **L1** per-colo Cache → **L2** live TVP API → **L3a** KV last-known-good → **L3b** raw GitHub mirror. KV is written **only** by the cron (`scheduled()`), never on the request path — the free tier allows ~1k KV writes/day.
 - **Raw mirror** (`https://raw.githubusercontent.com/seyfettinaskar7-sudo/polish-iptv/main/streams/{slug}.m3u`) — static snapshots committed every 15 min by `generate.py` (pure stdlib) via `.github/workflows/refresh.yml`. `deploy.yml` redeploys the Worker on any push to `worker/**`.
 
-TVP signs HLS tokens with a ~15–30 min lifetime, so freshness and fallback are the whole game. The cardinal cross-file rule: **`CHANNELS` (index.ts) and `TVP_CHANNELS` (generate.py) stay identical** — same `slug`, `id`, `name`, `group`.
+TVP signs HLS tokens with a ~15–30 min lifetime, so freshness and fallback are the whole game. The cardinal cross-file rule: **`CHANNELS` (TVPVOD.ts) and `TVP_CHANNELS` (generate_tvp.py) stay identical** — same `slug`, `id`, `name`, `group`.
 
-Current channels: `tvp1` 399697, `tvp2` 399698, `tvpinfo` 399699, `tvpsport` 399702, `tvpdokument` 399721, `tvpnauka` 399722, `tvprozrywka` 399724, `tvphistoria` 399703.
+Current channels:
+  { id: "399697", slug: "tvp1",        name: "TVP 1 HD",     
+  { id: "399698", slug: "tvp2",        name: "TVP 2 HD",     
+  { id: "399732", slug: "tvpbialystok",name: "TVP3Bialystok"
+  { id: "399740", slug: "tvpbydgoszcz",name: "TVP3Bydgoszcz",
+  { id: "399741", slug: "tvpgdansk",   name: "TVP3 Gdansk",  
+  { id: "399742", slug: "tvpgorzow",   name: "TVP3 Gorzow",  
+  { id: "399699", slug: "tvpinfo",     name: "TVP Info",    
+  { id: "399702", slug: "tvpsport",    name: "TVP Sport",    
+  { id: "399721", slug: "tvpdokument", name: "TVP Dokument", ,   { id: "399727", slug: "tvpabc2",     name: "TVP ABC 2",    
+  { id: "399728", slug: "tvpkultura2", name: "TVP Kultura 2",
+  { id: "399725", slug: "tvphistoria2",name: "TVP Historia2",
+  { id: "2724087",slug: "tvpmilosc",   name: "TVP Milosc",   
+  { id: "2543049",slug: "tvpklan",     name: "TVP Klan",     
+  { id: "399722", slug: "tvpnauka",    name: "TVP Nauka",    
+  { id: "2504621",slug: "tvpnadobre",  name: "TVP Na Dobre", 
+  { id: "399724", slug: "tvprozrywka", name: "TVP Rozrywka", 
+  { id: "999687", slug: "tvpwilno",    name: "TVP Wilno",    
+  { id: "399703", slug: "tvphistoria", name: "TVP Historia", 
 
 ## Working from claude.ai chat
 
