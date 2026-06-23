@@ -3,7 +3,7 @@
 TVP M3U generator — runs in GitHub Actions
 Writes files to the streams/ directory:
   streams/playlist.m3u  ← combined (all channels)
-  streams/tvp1.m3u, streams/tvp2.m3u, streams/tvpbialystok.m3u, streams/tvpbydgoszcz.m3u, streams/tvpgdansk.m3u, streams/tvpgorzow.m3u, streams/tvpkatowice.m3u, streams/tvpkielce.m3u, streams/tvpkrakow.m3u, streams/tvplodz.m3u, streams/tvpinfo.m3u, streams/tvpkryminaly.m3u, streams/tvpparlament.m3u
+  streams/tvp1.m3u, streams/tvp2.m3u, streams/tvpbialystok.m3u, streams/tvpbydgoszcz.m3u, streams/tvpgdansk.m3u, streams/tvpgorzow.m3u, streams/tvpkatowice.m3u, streams/tvpkielce.m3u, streams/tvpkrakow.m3u, streams/tvplodz.m3u, streams/tvplublin.m3u, streams/tvpolsztyn.m3u, streams/tvpinfo.m3u, streams/tvpkryminaly.m3u, streams/tvpparlament.m3u
   streams/tvpdokument.m3u, streams/tvpsport.m3u, streams/tvpabc2.m3u streams/tvpkultura2.m3u, streams/tvphistoria2.m3u, streams/tvpmilosc.m3u, streams/tvpmuzyka.m3u, streams/tvpklan.m3u,
   streams/tvpnauka.m3u, streams/tvpnadobre.m3u, streams/tvprozrywka.m3u, streams/tvpwilno.m3u, streams/tvphistoria.m3u
 
@@ -99,6 +99,13 @@ TVP_CHANNELS = [
         "id":    "399748",
         "slug":  "tvplublin",
         "name":  "TVP3 Lublin",
+        "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
+        "group": "Polska",
+    },
+                    {
+        "id":    "399749",
+        "slug":  "tvpolsztyn",
+        "name":  "TVP3 Olsztyn",
         "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
         "group": "Polska",
     },
