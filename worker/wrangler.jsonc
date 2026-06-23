@@ -1,0 +1,31 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "polish-iptv",
+  "main": "SRC/TVPVOD.ts",
+  "compatibility_date": "2026-06-03",
+  "workers_dev": true,
+
+  // Global last-known-good store. WRITTEN ONLY BY THE CRON (see scheduled()).
+  // 384 writes/day at the 30-min cadence below — well under the 1k/day cap.
+  "kv_namespaces": [
+    { "binding": "LKG", "id": "13a11c35c70e41aa9d683e9b23ed7cac" }
+  ],
+
+  // L3c mirror. WRITTEN ONLY BY THE CRON (see scheduled()). Survives the repo
+  // going private, unlike the raw.githubusercontent.com fallback. R2 free tier
+  // is 1M Class-A writes/month; 48 runs/day × 8 channels ≈ 11.5k/month.
+  "r2_buckets": [
+    { "binding": "MIRROR", "bucket_name": "polish-iptv-mirror" }
+  ],
+
+  // ~30 min keeps KV writes bounded; request-time resolution stays fresh
+  // regardless, so cadence only affects fallback freshness.
+  "triggers": {
+    "crons": ["*/30 * * * *"]
+  },
+
+  "observability": {
+    "enabled": true,
+    "logs": { "head_sampling_rate": 0.1 }
+  }
+}
