@@ -1,0 +1,14 @@
+{
+  "name": "polish-iptv-worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "types": "wrangler types",
+    "typecheck": "wrangler types && tsc --noEmit",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "typescript": "^6",
+    "wrangler": "^4"
+  }
+}
