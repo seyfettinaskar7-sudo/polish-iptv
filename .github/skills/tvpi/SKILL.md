@@ -1,6 +1,6 @@
 ---
-name: tvpi
-description: Work on the travino/tvpi IPTV project — review the Worker/generator/workflows against the project invariants, diagnose and fix a dead or stale channel, or add a new channel (TVP API, direct HLS, YouTube live). Use whenever tvpi comes up at all — "review tvpi", "audit the worker", a channel is offline/dropping/red-badged, "fix the stream", "tvpi is broken", "add TVP X", "put channel Y in the playlist", a vod.tvp.pl live URL or .m3u8 URL is given, or after modifying worker/src/index.ts, generate.py, or the workflows. Read the matching reference file before acting.
+name: polish-iptv
+description: Work on the seyfettinaskar7-sudo/polish-iptv IPTV project — review the Worker/generator/workflows against the project invariants, diagnose and fix a dead or stale channel, or add a new channel (TVP API, direct HLS, YouTube live, etc.). Use whenever tvpi comes up at all — "review tvpi", "audit the worker", a channel is offline/dropping/red-badged, "fix the stream", "tvpi is broken", "add TVP X", "put channel Y in the playlist", a vod.tvp.pl live URL or .m3u8 URL is given, or after modifying worker/src/index.ts, generate.py, or the workflows. Read the matching reference file before acting.
 license: Complete terms in LICENSE.txt
 ---
 
