@@ -80,6 +80,13 @@ TVP_CHANNELS = [
         "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
         "group": "Polska",
     },
+        {
+        "id":    "1065595",
+        "slug":  "tvpparlament",
+        "name":  "TVP Parlament",
+        "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
+        "group": "Polska",
+    },
     {
         "id":    "399702",
         "slug":  "tvpsport",
