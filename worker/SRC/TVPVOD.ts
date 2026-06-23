@@ -46,6 +46,7 @@ const CHANNELS: readonly Channel[] = [
   { id: "399742", slug: "tvpgorzow",   name: "TVP3 Gorzow",  logo: TVP_LOGO, group: "Polska" },
   { id: "399699", slug: "tvpinfo",     name: "TVP Info",     logo: TVP_LOGO, group: "Polska" },
   { id: "2543050",slug: "tvpkryminaly",name: "TVP Kryminaly",logo: TVP_LOGO, group: "Polska" },
+  { id: "1065595",slug: "tvpparlament",name: "TVP Parlament",logo: TVP_LOGO, group: "Polska" },
   { id: "399702", slug: "tvpsport",    name: "TVP Sport",    logo: TVP_LOGO, group: "Polska" },
   { id: "399721", slug: "tvpdokument", name: "TVP Dokument", logo: TVP_LOGO, group: "Polska" },
   { id: "399727", slug: "tvpabc2",     name: "TVP ABC 2",    logo: TVP_LOGO, group: "Polska" },
