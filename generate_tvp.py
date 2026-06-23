@@ -3,8 +3,8 @@
 TVP M3U generator — runs in GitHub Actions
 Writes files to the streams/ directory:
   streams/playlist.m3u  ← combined (all channels)
-  streams/tvp1.m3u, streams/tvp2.m3u, streams/tvpbialystok.m3u, streams/tvpabc2.m3u, streams/tvpbydgoszcz.m3u, streams/tvpgdansk.m3u, streams/tvpgorzow.m3u, streams/tvpinfo.m3u,
-  streams/tvpdokument.m3u, streams/tvpsport.m3u, streams/tvpkultura2.m3u, streams/tvphistoria2.m3u, streams/tvpmilosc.m3u, streams/tvpklan.m3u,
+  streams/tvp1.m3u, streams/tvp2.m3u, streams/tvpbialystok.m3u, streams/tvpbydgoszcz.m3u, streams/tvpgdansk.m3u, streams/tvpgorzow.m3u, streams/tvpinfo.m3u,
+  streams/tvpdokument.m3u, streams/tvpsport.m3u, streams/tvpabc2.m3u streams/tvpkultura2.m3u, streams/tvphistoria2.m3u, streams/tvpmilosc.m3u, streams/tvpklan.m3u,
   streams/tvpnauka.m3u, streams/tvpnadobre.m3u, streams/tvprozrywka.m3u, streams/tvpwilno.m3u, streams/tvphistoria.m3u
 
 A transient fetch failure no longer wipes a channel: the previous
@@ -38,6 +38,34 @@ TVP_CHANNELS = [
         "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
         "group": "Polska",
     },
+      {
+        "id":    "399732",
+        "slug":  "tvpbialystok",
+        "name":  "TVP3Bialystok",
+        "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
+        "group": "Polska",
+    },
+      {
+        "id":    "399740",
+        "slug":  "tvpbydgoszcz",
+        "name":  "TVP3Bydgoszcz",
+        "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
+        "group": "Polska",
+    },
+        {
+        "id":    "399741",
+        "slug":  "tvpgdansk",
+        "name":  "TVP3 Gdansk",
+        "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
+        "group": "Polska",
+    },
+        {
+        "id":    "399742",
+        "slug":  "tvpgorzow",
+        "name":  "TVP3 Gorzow",
+        "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
+        "group": "Polska",
+    },
     {
         "id":    "399699",
         "slug":  "tvpinfo",
@@ -49,6 +77,20 @@ TVP_CHANNELS = [
         "id":    "399702",
         "slug":  "tvpsport",
         "name":  "TVP Sport",
+        "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
+        "group": "Polska",
+    },
+      {
+        "id":    "399727",
+        "slug":  "tvpabc2",
+        "name":  "TVP ABC 2",
+        "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
+        "group": "Polska",
+    },
+        {
+        "id":    "399728",
+        "slug":  "tvpkultura2",
+        "name":  "TVP Kultura 2",
         "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
         "group": "Polska",
     },
