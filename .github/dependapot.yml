@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      actions:
+        patterns: ["*"]
+
+  # Worker build toolchain (wrangler, typescript). Pinned via worker/package.json
+  # + lockfile so `npm ci` is reproducible; Dependabot bumps the lockfile here.
+  - package-ecosystem: "npm"
+    directory: "/worker"
+    schedule:
+      interval: "weekly"
+    groups:
+      worker-toolchain:
+        patterns: ["*"]
