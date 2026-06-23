@@ -3,7 +3,7 @@
 TVP M3U generator — runs in GitHub Actions
 Writes files to the streams/ directory:
   streams/playlist.m3u  ← combined (all channels)
-  streams/tvp1.m3u, streams/tvp2.m3u, streams/tvpbialystok.m3u, streams/tvpbydgoszcz.m3u, streams/tvpgdansk.m3u, streams/tvpgorzow.m3u, streams/tvpinfo.m3u, streams/tvpkryminaly.m3u, streams/tvpparlament.m3u
+  streams/tvp1.m3u, streams/tvp2.m3u, streams/tvpbialystok.m3u, streams/tvpbydgoszcz.m3u, streams/tvpgdansk.m3u, streams/tvpgorzow.m3u, streams/tvpkatowice.m3u, streams/tvpinfo.m3u, streams/tvpkryminaly.m3u, streams/tvpparlament.m3u
   streams/tvpdokument.m3u, streams/tvpsport.m3u, streams/tvpabc2.m3u streams/tvpkultura2.m3u, streams/tvphistoria2.m3u, streams/tvpmilosc.m3u, streams/tvpmuzyka.m3u, streams/tvpklan.m3u,
   streams/tvpnauka.m3u, streams/tvpnadobre.m3u, streams/tvprozrywka.m3u, streams/tvpwilno.m3u, streams/tvphistoria.m3u
 
@@ -59,10 +59,18 @@ TVP_CHANNELS = [
         "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
         "group": "Polska",
     },
+
         {
         "id":    "399742",
         "slug":  "tvpgorzow",
         "name":  "TVP3 Gorzow",
+        "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
+        "group": "Polska",
+    },
+          {
+        "id":    "399743",
+        "slug":  "tvpkatowice",
+        "name":  "TVP3 Katowice",
         "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
         "group": "Polska",
     },
