@@ -109,6 +109,13 @@ TVP_CHANNELS = [
         "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
         "group": "Polska",
     },
+                      {
+        "id":    "399750",
+        "slug":  "tvpopole",
+        "name":  "TVP3 Opole",
+        "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
+        "group": "Polska",
+    },
     {
         "id":    "399699",
         "slug":  "tvpinfo",
