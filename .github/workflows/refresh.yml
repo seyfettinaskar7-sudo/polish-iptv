@@ -43,7 +43,7 @@ jobs:
         # On a transient TVP API failure generate.py reuses the channel's
         # last-known-good URL instead of writing a placeholder, so a single
         # flaky fetch no longer takes a channel dark.
-        run: python3 generate.py
+        run: python3 generate_tvp.py
 
       - name: Commit and push
         run: |
