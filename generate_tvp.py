@@ -123,6 +123,13 @@ TVP_CHANNELS = [
         "group": "Polska",
     },
             {
+        "id":    "2999109",
+        "slug":  "tvpmuzyka",
+        "name":  "TVP Muzyka",
+        "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
+        "group": "Polska",
+    },
+            {
         "id":    "2543049",
         "slug":  "tvpklan",
         "name":  "TVP Klan",
