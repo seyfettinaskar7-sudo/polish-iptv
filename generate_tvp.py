@@ -73,6 +73,13 @@ TVP_CHANNELS = [
         "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
         "group": "Polska",
     },
+      {
+        "id":    "2543050",
+        "slug":  "tvpkryminaly",
+        "name":  "TVP Kryminaly",
+        "logo":  "https://s.tvp.pl/files/tvp.pl/images/vod-logo-header.png",
+        "group": "Polska",
+    },
     {
         "id":    "399702",
         "slug":  "tvpsport",
