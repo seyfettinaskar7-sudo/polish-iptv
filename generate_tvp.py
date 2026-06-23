@@ -3,9 +3,9 @@
 TVP M3U generator — runs in GitHub Actions
 Writes files to the streams/ directory:
   streams/playlist.m3u  ← combined (all channels)
-  streams/tvp1.m3u, streams/tvp2.m3u, streams/tvpinfo.m3u,
-  streams/tvpdokument.m3u, streams/tvpsport.m3u,
-  streams/tvpnauka.m3u, streams/tvprozrywka.m3u, streams/tvphistoria.m3u
+  streams/tvp1.m3u, streams/tvp2.m3u, streams/tvpbialystok.m3u, streams/tvpabc2.m3u, streams/tvpbydgoszcz.m3u, streams/tvpgdansk.m3u, streams/tvpgorzow.m3u, streams/tvpinfo.m3u,
+  streams/tvpdokument.m3u, streams/tvpsport.m3u, streams/tvpkultura2.m3u, streams/tvphistoria2.m3u, streams/tvpmilosc.m3u, streams/tvpklan.m3u
+  streams/tvpnauka.m3u, streams/tvpnadobre.m3u, streams/tvprozrywka.m3u, streams/tvpwilno.m3u, streams/tvphistoria.m3u
 
 A transient fetch failure no longer wipes a channel: the previous
 last-known-good URL is reused so the channel stays up until either a
