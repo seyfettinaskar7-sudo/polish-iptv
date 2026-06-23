@@ -53,6 +53,7 @@ const CHANNELS: readonly Channel[] = [
   { id: "399728", slug: "tvpkultura2", name: "TVP Kultura 2",logo: TVP_LOGO, group: "Polska" },
   { id: "399725", slug: "tvphistoria2",name: "TVP Historia2",logo: TVP_LOGO, group: "Polska" },
   { id: "2724087",slug: "tvpmilosc",   name: "TVP Milosc",   logo: TVP_LOGO, group: "Polska" },
+  { id: "2999109",slug: "tvpmuzyka",   name: "TVP Muzyka",   logo: TVP_LOGO, group: "Polska" },
   { id: "2543049",slug: "tvpklan",     name: "TVP Klan",     logo: TVP_LOGO, group: "Polska" },  
   { id: "399722", slug: "tvpnauka",    name: "TVP Nauka",    logo: TVP_LOGO, group: "Polska" },
   { id: "2504621",slug: "tvpnadobre",  name: "TVP Na Dobre", logo: TVP_LOGO, group: "Polska" },  
