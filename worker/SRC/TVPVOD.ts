@@ -76,6 +76,10 @@ const CHANNELS: readonly Channel[] = [
   { id: "399703", slug: "tvphistoria", name: "TVP Historia", logo: TVP_LOGO, group: "Polska" },
 ] as const;
 
+interface Env {
+  LKG: KVNamespace;  // Cloudflare KV veri tabanın
+  MIRROR: R2Bucket;  // Cloudflare R2 dosya depolama alanın
+}
 const CHANNEL_BY_SLUG = new Map(CHANNELS.map((c) => [c.slug, c]));
 
 // ---------------------------------------------------------------------------
@@ -344,29 +348,7 @@ function buildM3U(entries: Entry[]): string {
   return lines.join("\n") + "\n";
 }
 
-// ---------------------------------------------------------------------------
-// M3U8 builder
-// ---------------------------------------------------------------------------
-
-interface Entry {
-  ch: Channel;
-  url: string;
 }
-
-
-function buildM3U8(entries: Entry[]): string {
-  const lines = ["#EXTM3U"];
-  for (const { ch, url } of entries) {
-    lines.push(
-      `#EXT-X-VERSION:3
-       #EXT-X-STREAM-INF:BANDWIDTH=1280000,RESOLUTION=1280x720
-      url,
-    );
-  }
-  return lines.join("\n") + "\n";
-}
-
-
 // ---------------------------------------------------------------------------
 // Entry point
 // ---------------------------------------------------------------------------
