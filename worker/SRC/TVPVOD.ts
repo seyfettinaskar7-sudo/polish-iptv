@@ -1,3 +1,7 @@
+interface Env {
+  LKG: KVNamespace;
+  MIRROR: R2Bucket;
+}
 /**
  * TVP Live Stream Worker (TypeScript)
  * Cloudflare Workers — free tier (100k req/day, 1k KV writes/day).
@@ -76,10 +80,6 @@ const CHANNELS: readonly Channel[] = [
   { id: "399703", slug: "tvphistoria", name: "TVP Historia", logo: TVP_LOGO, group: "Polska" },
 ] as const;
 
-interface Env {
-  LKG: KVNamespace;  // Cloudflare KV veri tabanın
-  MIRROR: R2Bucket;  // Cloudflare R2 dosya depolama alanın
-}
 const CHANNEL_BY_SLUG = new Map(CHANNELS.map((c) => [c.slug, c]));
 
 // ---------------------------------------------------------------------------
