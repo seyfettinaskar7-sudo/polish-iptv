@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-TVP M3U generator — runs in GitHub Actions
+TVP M3U & M3U8 Generator — runs in GitHub Actions
+Parses Master M3U8 playlists to extract the highest quality sub-streams.
 Writes files to the streams/ directory:
   streams/playlist.m3u  ← combined (all channels)
   streams/tvp1.m3u, streams/tvp2.m3u, streams/tvpbialystok.m3u, streams/tvpbydgoszcz.m3u, streams/tvpgdansk.m3u, streams/tvpgorzow.m3u, streams/tvpkatowice.m3u, streams/tvpkielce.m3u, streams/tvpkrakow.m3u, streams/tvplodz.m3u, streams/tvplublin.m3u, streams/tvpolsztyn.m3u, streams/tvpopole.m3u, streams/tvppoznan.m3u, streams/tvprzesrow.m3u, streams/tvpszczecin.m3u, streams/tvpwarszawa.m3u, streams/tvpwroclaw.m3u, streams/tvpbarwyszczescia.m3u, streams/tvpinfo.m3u, streams/tvpkryminaly.m3u, streams/tvpparlament.m3u, streams/tvpparlamentsejm.m3u
@@ -16,6 +17,7 @@ import json
 import os
 import sys
 import urllib.request
+import m3u8
 
 STREAMS_DIR = "streams"
 
@@ -307,12 +309,37 @@ def get_tvp_stream_url(channel_id):
             data = json.loads(r.read())
         hls_list = data.get("sources", {}).get("HLS", [])
         if hls_list:
+            master_url = hls_list[0]["src"]
+            return get_best_sub_stream(master_url) # master.m3u8'i buraya gönderiyoruz
+        if hls_list:
             return hls_list[0]["src"]
     except Exception as e:
         print(f"  [!] {channel_id}: {e}", file=sys.stderr)
     return None
 
-
+def get_best_sub_stream(master_url):
+    """
+    master.m3u8 linkini indirir, içindeki en yüksek 
+    çözünürlük/kaliteye sahip alt .m3u8 linkini bulur.
+    """
+    try:
+        req = urllib.request.Request(master_url, headers=HEADERS)
+        with urllib.request.urlopen(req, timeout=10) as response:
+            content = response.read().decode("utf-8")
+        
+        import m3u8
+        playlist = m3u8.loads(content, uri=master_url)
+        
+        if playlist.is_variant:
+            # Akışları kalitesine (bandwidth) göre büyükten küçüğe sırala
+            playlist.playlists.sort(key=lambda x: x.stream_info.bandwidth, reverse=True)
+            # En kaliteli alt akışın tam URL'sini döndür
+            return playlist.playlists[0].absolute_uri
+            
+        return master_url
+    except Exception as e:
+        print(f"  [!] M3U8 Parsing Error: {e}", file=sys.stderr)
+        return master_url  # Hata olursa orijinal linki koru
 # ---------------------------------------------------------------------------
 # M3U helpers
 # ---------------------------------------------------------------------------
