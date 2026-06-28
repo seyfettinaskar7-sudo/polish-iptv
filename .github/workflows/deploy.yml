@@ -1,43 +1,54 @@
-name: Deploy Worker
+name: Refresh TVP M3U
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "worker/**"
-      - ".github/workflows/deploy.yml"
+  schedule:
+    # Every 15 min. TVP signs HLS tokens with a ~15–30 min lifetime, so a
+    # 30-min cadence guarantees a dead window near the end of each cycle.
+    # 15 min keeps tokens fresh; note GitHub throttles frequent schedules and
+    # may still delay runs under load, so this narrows the gap rather than
+    # eliminating it. The Cloudflare Worker (request-time resolution) is the
+    # fully self-healing path — see README.
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+  actions: write
 
 concurrency:
-  group: deploy-worker
-  cancel-in-progress: false
+  group: refresh-tvp
+  cancel-in-progress: true
 
 jobs:
-  deploy:
+  refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
+
     steps:
-      - uses: actions/checkout@v6.0.2
 
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          cache: npm
-          cache-dependency-path: worker/package-lock.json
+      - name: Keep workflow alive
+        # Scheduled workflows are auto-disabled after 60 days of repo
+        # inactivity; re-enabling on every run prevents that.
+        run: |
+          curl -s -X PUT \
+            -H "Authorization: Bearer ${{ github.token }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/refresh.yml/enable"
 
-      - run: npm ci
-        working-directory: worker
+      - name: Checkout repo
+        uses: actions/checkout@v7
 
-      - name: Type check
-        run: npm run typecheck
-        working-directory: worker
+      - name: Generate playlists
+        # Pure-stdlib Python (urllib) — no extra dependencies needed.
+        # On a transient TVP API failure generate.py reuses the channel's
+        # last-known-good URL instead of writing a placeholder, so a single
+        # flaky fetch no longer takes a channel dark.
+        run: python3 generate.py
 
-      - name: Deploy
-        run: npx wrangler deploy
-        working-directory: worker
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Commit and push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add streams/
+          git diff --cached --quiet || git commit -m "chore: refresh streams [$(date -u '+%Y-%m-%d %H:%M UTC')]"
+          git push
