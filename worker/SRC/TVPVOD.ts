@@ -2,17 +2,18 @@ interface Env {
   LKG: KVNamespace;
   MIRROR: R2Bucket;
 }
+
 /**
  * TVP Live Stream Worker (TypeScript)
  * Cloudflare Workers — free tier (100k req/day, 1k KV writes/day).
  *
  * Routes:
- *   /  | /playlist.m3u             → all channels combined
- *   /tvp1.m3u … /tvphistoria.m3u   → individual TVP channels (nested playlist)
- *   /tvp1.m3u8 … /tvphistoria.m3u8 → 302 redirect to the tokenized HLS
- *                                    manifest. Stable, saveable URL for players
- *                                    that won't expand nested M3Us (MPC-HC/LAV)
- *                                    — a fresh token is resolved on every open.
+ * /  | /playlist.m3u           → all channels combined
+ * /tvp1.m3u … /tvphistoria.m3u   → individual TVP channels (nested playlist)
+ * /tvp1.m3u8 … /tvphistoria.m3u8 → 302 redirect to the tokenized HLS
+ * manifest. Stable, saveable URL for players
+ * that won't expand nested M3Us (MPC-HC/LAV)
+ * — a fresh token is resolved on every open.
  *
  * Per-channel resolution: L1 per-colo Cache → L2 live TVP API →
  * L3a KV global last-known-good → L3b raw GitHub mirror → L3c R2 mirror.
@@ -62,19 +63,19 @@ const CHANNELS: readonly Channel[] = [
   { id: "399755", slug: "tvpwroclaw",  name: "TVP3 Wroclaw", logo: TVP_LOGO, group: "Polska" },
   { id: "2543014", slug: "tvpbarwyszczescia",name: "TVP Barwyszczescia",logo: TVP_LOGO, group: "Polska" },
   { id: "399699", slug: "tvpinfo",     name: "TVP Info",     logo: TVP_LOGO, group: "Polska" },
-  { id: "2543050",slug: "tvpkryminaly",name: "TVP Kryminaly",logo: TVP_LOGO, group: "Polska" },
-  { id: "1065595",slug: "tvpparlament",name: "TVP Parlament",logo: TVP_LOGO, group: "Polska" },
-  { id: "1065594",slug: "tvpparlamentsejm",name: "TVP Parlament Sejm",logo: TVP_LOGO, group: "Polska" },
+  { id: "2543050", slug: "tvpkryminaly",name: "TVP Kryminaly",logo: TVP_LOGO, group: "Polska" },
+  { id: "1065595", slug: "tvpparlament",name: "TVP Parlament",logo: TVP_LOGO, group: "Polska" },
+  { id: "1065594", slug: "tvpparlamentsejm",name: "TVP Parlament Sejm",logo: TVP_LOGO, group: "Polska" },
   { id: "399702", slug: "tvpsport",    name: "TVP Sport",    logo: TVP_LOGO, group: "Polska" },
   { id: "399721", slug: "tvpdokument", name: "TVP Dokument", logo: TVP_LOGO, group: "Polska" },
   { id: "399727", slug: "tvpabc2",     name: "TVP ABC 2",    logo: TVP_LOGO, group: "Polska" },
   { id: "399728", slug: "tvpkultura2", name: "TVP Kultura 2",logo: TVP_LOGO, group: "Polska" },
   { id: "399725", slug: "tvphistoria2",name: "TVP Historia2",logo: TVP_LOGO, group: "Polska" },
-  { id: "2724087",slug: "tvpmilosc",   name: "TVP Milosc",   logo: TVP_LOGO, group: "Polska" },
-  { id: "2999109",slug: "tvpmuzyka",   name: "TVP Muzyka",   logo: TVP_LOGO, group: "Polska" },
-  { id: "2543049",slug: "tvpklan",     name: "TVP Klan",     logo: TVP_LOGO, group: "Polska" },  
+  { id: "2724087", slug: "tvpmilosc",   name: "TVP Milosc",   logo: TVP_LOGO, group: "Polska" },
+  { id: "2999109", slug: "tvpmuzyka",   name: "TVP Muzyka",   logo: TVP_LOGO, group: "Polska" },
+  { id: "2543049", slug: "tvpklan",     name: "TVP Klan",     logo: TVP_LOGO, group: "Polska" },  
   { id: "399722", slug: "tvpnauka",    name: "TVP Nauka",    logo: TVP_LOGO, group: "Polska" },
-  { id: "2504621",slug: "tvpnadobre",  name: "TVP Na Dobre", logo: TVP_LOGO, group: "Polska" },  
+  { id: "2504621", slug: "tvpnadobre",  name: "TVP Na Dobre", logo: TVP_LOGO, group: "Polska" },  
   { id: "399724", slug: "tvprozrywka", name: "TVP Rozrywka", logo: TVP_LOGO, group: "Polska" },
   { id: "999687", slug: "tvpwilno",    name: "TVP Wilno",    logo: TVP_LOGO, group: "Polska" },
   { id: "399703", slug: "tvphistoria", name: "TVP Historia", logo: TVP_LOGO, group: "Polska" },
@@ -87,20 +88,10 @@ const CHANNEL_BY_SLUG = new Map(CHANNELS.map((c) => [c.slug, c]));
 // ---------------------------------------------------------------------------
 
 const CACHE_KEY_PREFIX = "https://tvpi-cache/stream/";
-/** Keep BELOW TVP's token lifetime (~15–30 min). 600s = 10 min, safe margin. */
 const CACHE_TTL = 600;
-/** Bound every upstream fetch so a hung request fails over fast. */
-const LIVE_TIMEOUT_MS = 7_000;
-/** Raw committed playlist, kept ~fresh by GitHub Actions; served from GitHub's CDN. */
+const LIVE_TIMEOUT_MS = 7000;
 const RAW_BASE = "https://raw.githubusercontent.com/seyfettinaskar7-sudo/polish-iptv/main/streams/";
-/**
- * KV TTL for last-known-good. Kept SHORTER than the 30-min cron (900s = 15 min)
- * so a stale entry expires and resolution falls through to the raw GitHub
- * mirror (refreshed ~every 15 min by refresh.yml) instead of serving a
- * likely-expired TVP token out of KV.
- */
 const KV_TTL = 900;
-/** Attempts per live source fetch before failing over. */
 const RETRY_ATTEMPTS = 2;
 
 type Source = "cache" | "live" | "kv" | "raw" | "r2" | "none";
@@ -123,11 +114,6 @@ function log(level: Level, fields: Record<string, unknown>): void {
   else console.log(entry);
 }
 
-/**
- * Retry a source fetch. `fn` should THROW on transport failure (e.g. the
- * AbortError from AbortSignal.timeout) and return null when it reached the
- * upstream but found no URL. Returns the first truthy URL, or null when spent.
- */
 async function withRetry(
   label: string,
   fn: () => Promise<string | null>,
@@ -152,12 +138,10 @@ const sourceLabel = (ch: Channel): string => `tvp:${ch.slug}`;
 // L2 — TVP API
 // ---------------------------------------------------------------------------
 
-const TVP_API_URL =
-  "https://vod.tvp.pl/api/products/{id}/videos/playlist?platform=BROWSER&videoType=LIVE";
+const TVP_API_URL = "https://vod.tvp.pl/api/products/{id}/videos/playlist?platform=BROWSER&videoType=LIVE";
 
 const TVP_FETCH_HEADERS: HeadersInit = {
-  "User-Agent":
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
   Referer: "https://vod.tvp.pl/",
   Accept: "application/json, */*",
 };
@@ -167,8 +151,6 @@ interface TvpPlaylist {
 }
 
 async function fetchTvpStreamUrl(channelId: string): Promise<string | null> {
-  // No try/catch: a transport error (e.g. AbortSignal.timeout firing) throws so
-  // withRetry can log + retry it. A reachable-but-empty response returns null.
   const res = await fetch(TVP_API_URL.replace("{id}", channelId), {
     headers: TVP_FETCH_HEADERS,
     signal: AbortSignal.timeout(LIVE_TIMEOUT_MS),
@@ -185,8 +167,7 @@ async function fetchTvpStreamUrl(channelId: string): Promise<string | null> {
 async function readFromCache(slug: string): Promise<string | null> {
   const cached = await caches.default.match(new Request(CACHE_KEY_PREFIX + slug));
   if (!cached) return null;
-  const text = await cached.text();
-  return text || null;
+  return (await cached.text()) || null;
 }
 
 async function writeToCache(slug: string, url: string): Promise<void> {
@@ -201,9 +182,6 @@ async function writeToCache(slug: string, url: string): Promise<void> {
 
 // ---------------------------------------------------------------------------
 // L3a — KV global last-known-good
-//
-// READ on the request path (cheap: 100k reads/day free).
-// WRITE only from the cron (see refreshAllStreams).
 // ---------------------------------------------------------------------------
 
 async function readFromKV(env: Env, slug: string): Promise<string | null> {
@@ -217,16 +195,13 @@ async function readFromKV(env: Env, slug: string): Promise<string | null> {
 async function writeToKV(env: Env, slug: string, url: string): Promise<void> {
   try {
     await env.LKG.put("lkg:" + slug, url, { expirationTtl: KV_TTL });
-  } catch {
-    /* non-fatal */
-  }
+  } catch { /* non-fatal */ }
 }
 
 // ---------------------------------------------------------------------------
-// L3b — raw committed GitHub file (global, independent refresh path)
+// L3b — raw committed GitHub file
 // ---------------------------------------------------------------------------
 
-/** First http(s) URL line out of an .m3u body. */
 const firstUrl = (m3u: string): string | null =>
   m3u.split("\n").map((l) => l.trim()).find((l) => l.startsWith("http")) ?? null;
 
@@ -243,11 +218,7 @@ async function fetchRawGithubUrl(slug: string): Promise<string | null> {
 }
 
 // ---------------------------------------------------------------------------
-// L3c — R2 mirror (global, survives the repo going private)
-//
-// READ on the request path. WRITE only from the cron (see refreshAllStreams).
-// Keys mirror the raw layout (streams/<slug>.m3u) so the bucket doubles as a
-// public mirror if a custom domain is later attached to it.
+// L3c — R2 mirror
 // ---------------------------------------------------------------------------
 
 const R2_KEY = (slug: string): string => `streams/${slug}.m3u`;
@@ -270,16 +241,11 @@ async function writeToR2(env: Env, ch: Channel, url: string): Promise<void> {
         cacheControl: `public, max-age=${CACHE_TTL}`,
       },
     });
-  } catch {
-    /* non-fatal */
-  }
+  } catch { /* non-fatal */ }
 }
 
 // ---------------------------------------------------------------------------
 // Resolve: L1 → L2 → L3a → L3b → L3c
-//
-// The request path writes only the per-colo cache (L1). KV and R2 are the
-// cron's job.
 // ---------------------------------------------------------------------------
 
 async function getStreamUrl(ch: Channel, env: Env, ctx: ExecutionContext): Promise<Resolved> {
@@ -288,7 +254,7 @@ async function getStreamUrl(ch: Channel, env: Env, ctx: ExecutionContext): Promi
 
   const live = await withRetry(sourceLabel(ch), () => fetchTvpStreamUrl(ch.id));
   if (live) {
-    ctx.waitUntil(writeToCache(ch.slug, live)); // cache only — no KV write here
+    ctx.waitUntil(writeToCache(ch.slug, live));
     return { url: live, source: "live" };
   }
 
@@ -305,7 +271,7 @@ async function getStreamUrl(ch: Channel, env: Env, ctx: ExecutionContext): Promi
 }
 
 // ---------------------------------------------------------------------------
-// Cron — the ONLY place KV and the R2 mirror are written
+// Cron
 // ---------------------------------------------------------------------------
 
 async function refreshAllStreams(env: Env): Promise<void> {
@@ -348,7 +314,6 @@ function buildM3U(entries: Entry[]): string {
   return lines.join("\n") + "\n";
 }
 
-}
 // ---------------------------------------------------------------------------
 // Entry point
 // ---------------------------------------------------------------------------
@@ -370,8 +335,6 @@ export default {
           { status: 404, headers: { "Content-Type": "text/plain" } },
         );
 
-      // /<slug>.m3u8 → 302 to the freshly resolved tokenized HLS manifest.
-      // Gives players a stable URL that behaves like the manifest itself.
       if (path.endsWith(".m3u8")) {
         const ch = CHANNEL_BY_SLUG.get(path.slice(1, -".m3u8".length));
         if (!ch) return notFound();
